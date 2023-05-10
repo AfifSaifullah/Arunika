@@ -136,8 +136,8 @@ GameObject:
   - component: {fileID: 395696460}
   - component: {fileID: 395696462}
   - component: {fileID: 395696465}
-  - component: {fileID: 395696464}
-  - component: {fileID: 395696463}
+  - component: {fileID: 395696467}
+  - component: {fileID: 395696466}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -259,44 +259,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.6, y: 1.5}
   m_EdgeRadius: 0
---- !u!114 &395696463
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 395696458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d3609d142620474cb2cb88e8f71e965, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controller: {fileID: 395696464}
-  anime: {fileID: 395696465}
---- !u!114 &395696464
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 395696458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbff43dd1a883354d9950a178e76b0a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  walkingSpeed: 5
-  runningSpeed: 20
-  dashDistance: 5
-  whatIsGround:
-    serializedVersion: 2
-    m_Bits: 1
-  myRigidBody: {fileID: 395696460}
-  playerCollider: {fileID: 395696462}
-  dash: 0
-  airControl: 0.05
-  jumpForce: 30
-  isRunning: 1
 --- !u!95 &395696465
 Animator:
   serializedVersion: 4
@@ -317,6 +279,44 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &395696466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 395696458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14568bc2b5f7e274092b11399b43bf61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 395696467}
+  anime: {fileID: 395696465}
+--- !u!114 &395696467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 395696458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ee9b7e1fc193db47a5c2c6e0255ecf7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myRigidBody: {fileID: 395696460}
+  myCollider: {fileID: 395696462}
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 1
+  isRunning: 1
+  isDashing: 0
+  grounded: 0
+  airControl: 0.05
+  runningSpeed: 20
+  walkingSpeed: 5
+  jumpStrength: 30
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
