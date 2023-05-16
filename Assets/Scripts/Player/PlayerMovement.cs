@@ -31,7 +31,6 @@ public class PlayerMovement : MonoBehaviour
 
     public float nyawa = 100f;
     
-
     // Start is called before the first frame update
     void Start()
     {

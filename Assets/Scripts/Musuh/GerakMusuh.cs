@@ -13,6 +13,8 @@ public class GerakMusuh : MonoBehaviour
     public bool kenaserang = false;
     public bool deteksi = false;
     public float nyawa = 50;
+    public AudioSource suaraKenaSerang;
+    public AudioSource suaraNyerang;
     Animator anim;
 
     // Start is called before the first frame update
@@ -46,6 +48,9 @@ public class GerakMusuh : MonoBehaviour
             GameObject go = GameObject.Find("Player");
             PlayerMovement sc = (PlayerMovement) go.GetComponent(typeof(PlayerMovement));
             sc.kuranginNyawa();
+            if(!suaraNyerang.isPlaying){
+                suaraNyerang.Play();
+            }
         }else{
             anim.SetBool("serang", false);
         }
@@ -59,6 +64,10 @@ public class GerakMusuh : MonoBehaviour
                 Destroy(gameObject);
             }else{
                 nyawa -= .5f;
+            }
+
+            if(!suaraKenaSerang.isPlaying){
+                suaraKenaSerang.Play();
             }
         }else{
             anim.SetBool("ketarKetir", false);
