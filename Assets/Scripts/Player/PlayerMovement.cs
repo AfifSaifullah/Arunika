@@ -28,6 +28,8 @@ public class PlayerMovement : MonoBehaviour
     public float runningSpeed;
     public float walkingSpeed;
     public float jumpStrength; 
+
+    public float nyawa = 100f;
     
 
     // Start is called before the first frame update
@@ -43,6 +45,15 @@ public class PlayerMovement : MonoBehaviour
 
         if(dashCooldownLeft > 0)
             dashCooldownLeft -= Time.deltaTime;
+    }
+
+    public void kuranginNyawa()
+    {
+        if(nyawa < 1f){
+            Destroy(gameObject);
+        }else{
+            nyawa -= .3f;
+        }
     }
 
     // Mengubah state jalan/lari

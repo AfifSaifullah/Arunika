@@ -10,7 +10,9 @@ public class GerakMusuh : MonoBehaviour
     public bool jalan = false;
     public bool arahKanan = true;
     public bool serang = false;
+    public bool kenaserang = false;
     public bool deteksi = false;
+    public float nyawa = 50;
     Animator anim;
 
     // Start is called before the first frame update
@@ -22,6 +24,7 @@ public class GerakMusuh : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if(jalan){
             anim.SetBool("lari", true);
         
@@ -35,26 +38,36 @@ public class GerakMusuh : MonoBehaviour
             anim.SetBool("diam", true);
         }
 
-        // if(serang && deteksi){
-        //     anim.SetBool("serang", true);
-        // }else{
-        //     anim.SetBool("serang", false);
-        //     anim.SetBool("diam", false);
-        //     anim.SetBool("serang", false);
-        //     jalan = true;
-        // }
+        if(serang){
+            anim.SetBool("serang", true);
+            anim.SetBool("lari", false);
+            anim.SetBool("ketarKetir", false);
+            anim.SetBool("diam", false);
+            GameObject go = GameObject.Find("Player");
+            PlayerMovement sc = (PlayerMovement) go.GetComponent(typeof(PlayerMovement));
+            sc.kuranginNyawa();
+        }else{
+            anim.SetBool("serang", false);
+        }
 
-        // if(!deteksi){
-        //     anim.SetBool("diam", false);
-        //     anim.SetBool("serang", false);
-        //     jalan = true;
-        // }
-        // deteksi = false;
+        if(kenaserang){
+            anim.SetBool("ketarKetir", true);
+            anim.SetBool("diam", false);
+            anim.SetBool("serang", false);
+            anim.SetBool("lari", false);
+            if(nyawa < 1){
+                Destroy(gameObject);
+            }else{
+                nyawa -= .5f;
+            }
+        }else{
+            anim.SetBool("ketarKetir", false);
+        }
 
     }
 
     void OnTriggerEnter2D(Collider2D collision)
-    {
+    {   
 
         if(collision.gameObject.name == "Tilemap"){
             jalan = true;
@@ -63,13 +76,29 @@ public class GerakMusuh : MonoBehaviour
         }else if(collision.gameObject.name == "TembokKiri"){
             arahKanan = true;
         }else if(collision.gameObject.name == "Player"){
-            //jalan = false;
-            serang = true;
-            anim.SetBool("serang", true);
-        }else{
-            print(collision.gameObject.name);
-        }   
 
+            GameObject go = GameObject.Find("Player");
+            PlayerMovement sc = (PlayerMovement) go.GetComponent(typeof(PlayerMovement));
+
+            if (sc.isDashing){
+                jalan = false;
+                kenaserang = true;
+            }else{
+                jalan = false;
+                serang = true;
+            }
+
+        }
+
+    }
+
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if(other.gameObject.name == "Player"){
+            jalan = true;
+            serang = false;
+            kenaserang = false;
+        }
     }
 
     public void gerakKanan()
