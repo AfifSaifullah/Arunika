@@ -19,9 +19,9 @@ public class PlayerMovement : MonoBehaviour
 
     private float currentSpeed = 20f;
     private bool facingRight = true;
-    public bool isRunning = true;
-    public bool isDashing;
-    public bool grounded;
+    [HideInInspector] public bool isRunning = true;
+    [HideInInspector] public bool isDashing = false;
+    [HideInInspector] public bool grounded;
 
     
     [Range(0, 1)] public float airControl;
