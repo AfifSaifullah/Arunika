@@ -77,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
         if(isAttacking)
             attackNo = (attackNo + 1) % 2;
 
-        attackWaitTime = 1f;
+        attackWaitTime = 0.8f;
         isAttacking = true;
         isDashing = false;
     }
