@@ -59,6 +59,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
     // ==========================================================
     // Combat Mechanics
     // ==========================================================
@@ -90,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
             Debug.Log("Enemy Hit");
         }
     }
+
 
     // ==========================================================
     // Locomotion Mechanics
@@ -157,6 +159,7 @@ public class PlayerMovement : MonoBehaviour
         newScale.x *= -1;
         transform.localScale = newScale;
     }
+
 
     // ==========================================================
     // Other Mechanics

@@ -93,7 +93,7 @@ public class PlayerControl : MonoBehaviour
         animate();
     }
     
-    // Kontrol Animasi
+    // Jalankan animasi
     void animate()
     {
         if(controller.isDashing) {
