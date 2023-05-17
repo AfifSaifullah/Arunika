@@ -2,17 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GerakMusuh : MonoBehaviour
+public class MinionControl : Musuh
 {
+    [SerializeField] private Rigidbody2D myRigidBody;
     public float kecepatan = .1f;
-    public bool balik = false;
     public int arah = 1;
     public bool jalan = false;
     public bool arahKanan = true;
     public bool serang = false;
     public bool kenaserang = false;
-    public bool deteksi = false;
-    public float nyawa = 50;
     public AudioSource suaraKenaSerang;
     public AudioSource suaraNyerang;
     Animator anim;
@@ -23,19 +21,26 @@ public class GerakMusuh : MonoBehaviour
         anim = GetComponent<Animator>();
     }
 
+    void Awake()
+    {
+        nyawa = 50f;
+        attackVal = 10f;
+    }
+
     // Update is called once per frame
     void Update()
     {
-
         if(jalan){
             anim.SetBool("lari", true);
         
-            if(arahKanan){
+            if(arahKanan) {
                 gerakKanan();
-            }else{
+            }
+            else {
                 gerakKiri();
             }
-        }else{
+        }
+        else {
             anim.SetBool("lari", false);
             anim.SetBool("diam", true);
         }
@@ -45,69 +50,83 @@ public class GerakMusuh : MonoBehaviour
             anim.SetBool("lari", false);
             anim.SetBool("ketarKetir", false);
             anim.SetBool("diam", false);
-            GameObject go = GameObject.Find("Player");
-            PlayerMovement sc = (PlayerMovement) go.GetComponent(typeof(PlayerMovement));
-            sc.kuranginNyawa();
-            if(!suaraNyerang.isPlaying){
-                suaraNyerang.Play();
-            }
-        }else{
+        }
+        else {
             anim.SetBool("serang", false);
         }
 
-        if(kenaserang){
+        if(kenaserang) {
             anim.SetBool("ketarKetir", true);
             anim.SetBool("diam", false);
             anim.SetBool("serang", false);
             anim.SetBool("lari", false);
-            if(nyawa < 1){
-                Destroy(gameObject);
-            }else{
-                nyawa -= .5f;
-            }
-
-            if(!suaraKenaSerang.isPlaying){
-                suaraKenaSerang.Play();
-            }
-        }else{
+        }
+        else {
             anim.SetBool("ketarKetir", false);
         }
-
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {   
 
-        if(collision.gameObject.name == "Tilemap"){
+        if(collision.gameObject.name == "Tilemap") {
             jalan = true;
-        }else if(collision.gameObject.name == "TembokKanan"){
+        }
+        else if(collision.gameObject.name == "TembokKanan") {
             arahKanan = false;
-        }else if(collision.gameObject.name == "TembokKiri"){
+        }
+        else if(collision.gameObject.name == "TembokKiri") {
             arahKanan = true;
-        }else if(collision.gameObject.name == "Player"){
-
+        }
+        else if(collision.gameObject.name == "Player" && !collision.isTrigger) {
             GameObject go = GameObject.Find("Player");
             PlayerMovement sc = (PlayerMovement) go.GetComponent(typeof(PlayerMovement));
 
-            if (sc.isDashing){
-                jalan = false;
-                kenaserang = true;
-            }else{
-                jalan = false;
-                serang = true;
-            }
-
+            jalan = false;
+            serang = true;
         }
-
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if(other.gameObject.name == "Player"){
+        if(other.gameObject.name == "Player") {
             jalan = true;
             serang = false;
-            kenaserang = false;
         }
+    }
+
+    public void AttackPlayer()
+    {
+        GameObject go = GameObject.Find("Player");
+        PlayerMovement sc = (PlayerMovement) go.GetComponent(typeof(PlayerMovement));
+        sc.kuranginNyawa(attackVal);
+        
+        if(!suaraNyerang.isPlaying) {
+            suaraNyerang.Play();
+        }
+    }
+
+    public override void Attacked(float damage)
+    {
+        kenaserang = true;
+        nyawa -= damage;
+
+        Debug.Log(nyawa);
+
+        if(nyawa <= 0) {
+            Destroy(gameObject);
+        }
+
+        // myRigidBody.AddForce(new Vector2(5f * -arah, 5f), ForceMode2D.Impulse);
+
+        if(!suaraKenaSerang.isPlaying) {
+            suaraKenaSerang.Play();
+        }
+    }
+
+    public void BangunLagi()
+    {
+        kenaserang = false;
     }
 
     public void gerakKanan()
