@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Rigidbody2D myRigidBody;
     [SerializeField] private Collider2D myCollider;
     [SerializeField] private LayerMask whatIsGround;
+    const float groundedRadius = 0.1f;
 
     private Vector2 dashTarget;
     private float dashDistance = 5f;
@@ -114,11 +115,23 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public void groundCheck() {
-        grounded = myCollider.IsTouchingLayers(whatIsGround.value);
-    }
+        // grounded = myCollider.IsTouchingLayers(whatIsGround.value);
+        
+        Vector2 circleCenter = transform.position;
+        circleCenter.y -= 2f;
 
-    public bool isGrounded() {
-        return grounded;
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(circleCenter, groundedRadius, whatIsGround);
+    
+        foreach (Collider2D collider in colliders)
+        {
+            if(collider.gameObject == gameObject)
+                continue;
+            
+            grounded = true;
+            return;
+        }
+
+        grounded = false;
     }
 
     public Vector2 getPos() {

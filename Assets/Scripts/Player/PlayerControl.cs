@@ -47,11 +47,11 @@ public class PlayerControl : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.LeftControl))
             controller.changeRunningState();
 
-        if((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && (jumpCounter != maxJumpCount || controller.isGrounded()))
+        if((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && (jumpCounter != maxJumpCount || controller.grounded))
         {
             jumpBegin = true;
 
-            if(controller.isGrounded()) jumpCounter = 0;
+            if(controller.grounded) jumpCounter = 0;
             jumpCounter++;
         }
 
@@ -76,8 +76,12 @@ public class PlayerControl : MonoBehaviour
         
         controller.MoveHorizontally(moveDirection);
 
-
-        // Jalankan Animasi ==============================================
+        animate();
+    }
+    
+    // Jalankan Animasi ==============================================
+    void animate()
+    {
         if(controller.isDashing)
         {
             changeAnimationState(PlayerAnimation.Dash);
@@ -98,8 +102,8 @@ public class PlayerControl : MonoBehaviour
             else
                 changeAnimationState(PlayerAnimation.Fall);
         }
-        // ===============================================================
     }
+    // ===============================================================
 
     void changeAnimationState(PlayerAnimation newState)
     {
@@ -133,7 +137,7 @@ public class PlayerControl : MonoBehaviour
         isAnimationPaused = true;
         pauseAnimation();
 
-        while(currentAnimationState == PlayerAnimation.Fall && !controller.isGrounded())
+        while(currentAnimationState == PlayerAnimation.Fall && !controller.grounded)
             yield return null;
         
         isAnimationPaused = false;
