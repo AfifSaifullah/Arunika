@@ -8,7 +8,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private Animator anime;
     private float moveDirection;
     private int jumpCounter = 0, maxJumpCount = 2;
-    private bool jumpBegin = false, dashBegin = false;
+    private bool jumpBegin = false, dashBegin = false, attackBegin = false;
 
     // Kontrol Animasi ===============================================
     public enum PlayerAnimation {
@@ -17,7 +17,9 @@ public class PlayerControl : MonoBehaviour
         Run,
         Dash,
         Jump,
-        Fall
+        Fall,
+        NATK1,
+        NATK2
     }
 
     public Dictionary<PlayerAnimation, string> animationName = new Dictionary<PlayerAnimation, string>(){
@@ -26,7 +28,9 @@ public class PlayerControl : MonoBehaviour
         {PlayerAnimation.Run, "running"},
         {PlayerAnimation.Dash, "dash"},
         {PlayerAnimation.Jump, "jump"},
-        {PlayerAnimation.Fall, "fall"}
+        {PlayerAnimation.Fall, "fall"},
+        {PlayerAnimation.NATK1, "normal_attack_1"},
+        {PlayerAnimation.NATK2, "normal_attack_2"}
     };
 
     PlayerAnimation currentAnimationState = PlayerAnimation.Idle;
@@ -57,6 +61,10 @@ public class PlayerControl : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Space))
             dashBegin = true;
+
+        if(Input.GetKeyDown(KeyCode.X))
+            attackBegin = true;
+
     }
 
     void FixedUpdate()
@@ -73,20 +81,39 @@ public class PlayerControl : MonoBehaviour
             controller.Jump();
             jumpBegin = false;
         }
+
+        if(attackBegin)
+        {
+            controller.startAttack();
+            attackBegin = false;
+        }
         
         controller.MoveHorizontally(moveDirection);
 
         animate();
     }
     
-    // Jalankan Animasi ==============================================
+    // Kontrol Animasi
     void animate()
     {
-        if(controller.isDashing)
-        {
+        if(controller.isDashing) {
             changeAnimationState(PlayerAnimation.Dash);
+            return;
         }
-        else if(controller.grounded)
+
+        if(controller.isAttacking) {
+            switch(controller.attackNo) {
+                case 0:
+                    changeAnimationState(PlayerAnimation.NATK1);
+                    break;
+                case 1:
+                    changeAnimationState(PlayerAnimation.NATK2);
+                    break;
+            }
+            return;
+        }
+        
+        if(controller.grounded)
         {
             if(moveDirection != 0)
                 changeAnimationState(controller.isRunning ? PlayerAnimation.Run : PlayerAnimation.Walk);
@@ -103,7 +130,6 @@ public class PlayerControl : MonoBehaviour
                 changeAnimationState(PlayerAnimation.Fall);
         }
     }
-    // ===============================================================
 
     void changeAnimationState(PlayerAnimation newState)
     {
@@ -138,6 +164,21 @@ public class PlayerControl : MonoBehaviour
         pauseAnimation();
 
         while(currentAnimationState == PlayerAnimation.Fall && !controller.grounded)
+            yield return null;
+        
+        isAnimationPaused = false;
+        continueAnimation();
+    }
+
+    public IEnumerator attackAnimationPause()
+    {
+        if(isAnimationPaused)
+            yield break;
+        
+        isAnimationPaused = true;
+        pauseAnimation();
+
+        while(controller.isAttacking && !attackBegin)
             yield return null;
         
         isAnimationPaused = false;

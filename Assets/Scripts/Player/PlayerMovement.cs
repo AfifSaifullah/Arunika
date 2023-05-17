@@ -6,7 +6,10 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D myRigidBody;
     [SerializeField] private Collider2D myCollider;
+    [SerializeField] private Collider2D AttackTrigger;
     [SerializeField] private LayerMask whatIsGround;
+    [SerializeField] private LayerMask enemyLayer;
+    private List<Collider2D> enemiesInRange = new List<Collider2D>();
     const float groundedRadius = 0.1f;
 
     private Vector2 dashTarget;
@@ -16,20 +19,21 @@ public class PlayerMovement : MonoBehaviour
     private float dashCooldown = 1f;
     private float dashCooldownLeft;
     private float dashCounter;
-    // private float dashCD;
+    private float attackWaitTime = 0f;
+    [HideInInspector] public int attackNo = 0;
 
     private float currentSpeed = 20f;
     private bool facingRight = true;
     [HideInInspector] public bool isRunning = true;
     [HideInInspector] public bool isDashing = false;
+    [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool grounded;
-
     
     [Range(0, 1)] public float airControl;
     public float runningSpeed;
     public float walkingSpeed;
     public float jumpStrength; 
-
+    public float attackDamage;
     public float nyawa = 100f;
     
     // Start is called before the first frame update
@@ -45,16 +49,51 @@ public class PlayerMovement : MonoBehaviour
 
         if(dashCooldownLeft > 0)
             dashCooldownLeft -= Time.deltaTime;
-    }
 
-    public void kuranginNyawa()
-    {
-        if(nyawa < 1f){
-            Destroy(gameObject);
-        }else{
-            nyawa -= .3f;
+        if(attackWaitTime > 0) {
+            attackWaitTime -= Time.deltaTime;
+        }
+        else {
+            isAttacking = false;
+            attackNo = 0;
         }
     }
+
+    // ==========================================================
+    // Combat Mechanics
+    // ==========================================================
+
+    public void kuranginNyawa(float damage)
+    {
+        nyawa -= damage;
+
+        if(nyawa <= 0)
+            Destroy(gameObject);
+    }
+
+    public void startAttack()
+    {
+        if(isAttacking)
+            attackNo = (attackNo + 1) % 2;
+
+        attackWaitTime = 1f;
+        isAttacking = true;
+        isDashing = false;
+    }
+
+    public void dealDamage()
+    {
+        foreach(Collider2D enemyCollider in enemiesInRange)
+        {
+            Musuh enemy = enemyCollider.GetComponent<Musuh>();
+            enemy.Attacked(attackDamage);
+            Debug.Log("Enemy Hit");
+        }
+    }
+
+    // ==========================================================
+    // Locomotion Mechanics
+    // ==========================================================
 
     // Mengubah state jalan/lari
     public void changeRunningState()
@@ -75,6 +114,7 @@ public class PlayerMovement : MonoBehaviour
         dashCooldownLeft = dashCooldown;
         dashCounter++;
         isDashing = true;
+        isAttacking = false;
     }
 
     // Bergerak secara horizontal
@@ -93,6 +133,9 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+        if(direction != 0)
+            isAttacking = false;
+
         float deltaVelocity = (currentSpeed * direction - myRigidBody.velocity.x) * (grounded ? 1 : airControl * (direction == 0 ? 0 : 1));
         myRigidBody.velocity = new Vector2(myRigidBody.velocity.x + deltaVelocity, myRigidBody.velocity.y);
     }
@@ -101,6 +144,7 @@ public class PlayerMovement : MonoBehaviour
     public void Jump()
     {
         myRigidBody.AddForce(transform.up * jumpStrength, ForceMode2D.Impulse);
+        isAttacking = false;
         isDashing = false;
     }
 
@@ -114,6 +158,11 @@ public class PlayerMovement : MonoBehaviour
         transform.localScale = newScale;
     }
 
+    // ==========================================================
+    // Other Mechanics
+    // ==========================================================
+
+    // Mengencek apakah objek pemain menyentuh tanah
     public void groundCheck() {
         // grounded = myCollider.IsTouchingLayers(whatIsGround.value);
         
@@ -134,11 +183,31 @@ public class PlayerMovement : MonoBehaviour
         grounded = false;
     }
 
+    // Mengembalikan koordinat 2d posisi tengah objek pemain
     public Vector2 getPos() {
         return myRigidBody.position;
     }
 
+    // Mengembalikan vektor 2d kecepatan objek pemain
     public Vector2 getVel() {
         return myRigidBody.velocity;
+    }
+
+    // Dijalankan ketika sebuah objek memasuki boundary trigger collider pemain
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log("Masuk");
+        if(!other.isTrigger && ((enemyLayer.value & (1 << other.gameObject.layer)) != 0))
+        {
+            Debug.Log("Musuh Masuk");
+            enemiesInRange.Add(other);
+        }
+    }
+
+    // Dijalankan ketika sebuah objek keluar dari boundary trigger collider pemain
+    void OnTriggerExit2D(Collider2D other)
+    {
+        if(enemiesInRange.Contains(other))
+            enemiesInRange.Remove(other);
     }
 }
