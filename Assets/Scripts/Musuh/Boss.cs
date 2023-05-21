@@ -2,8 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Boss : MonoBehaviour
+public class Boss : Musuh
 {
+    [SerializeField] private Rigidbody2D myRig;
+    [SerializeField] private Collider2D myCold;
+    [SerializeField] private Collider2D myTrig;
+    [SerializeField] private Transform PlayerP;
+    private bool facingRight;
+    private float health;
+    private float attackDamage;
+    public float speed;
+    
+    
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,4 +27,11 @@ public class Boss : MonoBehaviour
     {
         
     }
+
+    public override void Attacked(float damage)
+    {
+        
+    }
+
+    
 }
