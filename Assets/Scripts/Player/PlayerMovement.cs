@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -35,11 +37,17 @@ public class PlayerMovement : MonoBehaviour
     public float jumpStrength; 
     public float attackDamage;
     public float nyawa = 100f;
+
+    public TMP_Text textNyawa;
     
     // Start is called before the first frame update
     void Start()
     {
-        
+
+    }
+
+    void Update(){
+        textNyawa.text = "Nyawa: " + nyawa.ToString();
     }
 
     // Update is called once per frame

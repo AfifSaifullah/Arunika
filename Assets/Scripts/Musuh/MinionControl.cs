@@ -11,8 +11,6 @@ public class MinionControl : Musuh
     public bool arahKanan = true;
     public bool serang = false;
     public bool kenaserang = false;
-    public AudioSource suaraKenaSerang;
-    public AudioSource suaraNyerang;
     Animator anim;
 
     // Start is called before the first frame update
@@ -101,9 +99,9 @@ public class MinionControl : Musuh
         PlayerMovement sc = (PlayerMovement) go.GetComponent(typeof(PlayerMovement));
         sc.kuranginNyawa(attackVal);
         
-        if(!suaraNyerang.isPlaying) {
-            suaraNyerang.Play();
-        }
+        GameObject aud = GameObject.Find("AudioManager");
+        AudioManageGame sc_aud = (AudioManageGame) aud.GetComponent(typeof(AudioManageGame));
+        sc_aud.MinionNyerang();
     }
 
     public override void Attacked(float damage)
@@ -119,9 +117,10 @@ public class MinionControl : Musuh
 
         // myRigidBody.AddForce(new Vector2(5f * -arah, 5f), ForceMode2D.Impulse);
 
-        if(!suaraKenaSerang.isPlaying) {
-            suaraKenaSerang.Play();
-        }
+        GameObject go = GameObject.Find("AudioManager");
+        AudioManageGame sc = (AudioManageGame) go.GetComponent(typeof(AudioManageGame));
+        sc.MinionKenaSerang();
+
     }
 
     public void BangunLagi()
