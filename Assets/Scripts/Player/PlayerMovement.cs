@@ -41,6 +41,8 @@ public class PlayerMovement : MonoBehaviour
     public float nyawa = 100f;
 
     public TMP_Text textNyawa;
+
+    public PlayerHp Hpbar;
     
     // Start is called before the first frame update
     void Start()
@@ -49,7 +51,8 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void Update(){
-        textNyawa.text = "HP: " + nyawa.ToString() + "%";
+        Hpbar.PlayerBar(nyawa);
+                textNyawa.text = "HP: " + nyawa.ToString() + "%";
     }
 
     // Update is called once per frame
