@@ -4,17 +4,6 @@ using UnityEngine;
 
 public class Boss : Musuh
 {
-    // [SerializeField] private Rigidbody2D myRig;
-    // [SerializeField] private Collider2D myCold;
-    // [SerializeField] private Collider2D myTrig;
-    // [SerializeField] private Transform PlayerP;
-    // private bool facingRight;
-    // private float health;
-    // private float attackDamage;
-    // public float speed;
-    
-    ///
-
     [SerializeField] private PlayerMovement PlayerObj;
     [SerializeField] private AudioManageGame AudioMan;
     [SerializeField] private Rigidbody2D myRigidBody;
@@ -72,6 +61,9 @@ public class Boss : Musuh
     {
         if(nyawa <= 0) return;
 
+        if(kenaserang)
+            return;
+
         float strayDistance = Vector2.Distance(myRigidBody.position, anchorPos);
         float playerDistance = Vector2.Distance(myRigidBody.position, PlayerObj.getPos());
         bool anchorDir = myRigidBody.position.x < anchorPos.x;
@@ -105,7 +97,7 @@ public class Boss : Musuh
         if((strayDistance >= maxStrayDistance) && arahKanan != anchorDir)
             arahKanan = anchorDir;
 
-        if(jalan && !kenaserang){
+        if(jalan && !kenaserang && attackMode){
             // anim.SetBool("lari", true);
             changeAnimationState(BossAnim.Walk);
         
