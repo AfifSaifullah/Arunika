@@ -39,4 +39,16 @@ public class AudioManageGame : MonoBehaviour
             suaraMinionNyerang.Play();
         }
     }
+
+    public void BossKenaSerang(){
+        if(!suaraMinionKenaSerang.isPlaying){
+            suaraMinionKenaSerang.Play();
+        }
+    }
+
+    public void BossNyerang(){
+        if(!suaraMinionNyerang.isPlaying){
+            suaraMinionNyerang.Play();
+        }
+    }
 }
