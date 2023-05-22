@@ -55,4 +55,9 @@ public class MenuPause : MonoBehaviour
         PlayerPrefs.SetFloat("volume", volumeSlider.value);
         PlayerPrefs.SetInt("diubah", 1);
     }
+    public void keluar()
+    {
+        Application.Quit();  
+    }
+    
 }
