@@ -1774,9 +1774,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MenuAwal, Assembly-CSharp
-        m_MethodName: exitgame
+      - m_Target: {fileID: 519420034}
+        m_TargetAssemblyTypeName: MenuPause, Assembly-CSharp
+        m_MethodName: keluar
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
