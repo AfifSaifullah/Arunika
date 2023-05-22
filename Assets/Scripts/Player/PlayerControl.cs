@@ -10,6 +10,12 @@ public class PlayerControl : MonoBehaviour
     private int jumpCounter = 0, maxJumpCount = 2;
     private bool jumpBegin = false, dashBegin = false, attackBegin = false;
 
+    public bool tombolKanan = false;
+    public bool tombolKiri = false;
+    public bool tombolLompat = false;
+    public bool tombolSerang = false;
+    public bool tombolDash = false;
+
     // Kontrol Animasi ===============================================
     public enum PlayerAnimation {
         Idle,
@@ -48,10 +54,19 @@ public class PlayerControl : MonoBehaviour
     {
         moveDirection = Input.GetAxisRaw("Horizontal");
 
+        if(tombolKanan || tombolKiri){
+            // controller.changeRunningState();
+            if(tombolKanan && !tombolKiri){
+                moveDirection = 1;
+            }else if(tombolKiri && !tombolKanan){
+                moveDirection = -1;
+            }
+        }
+
         if(Input.GetKeyDown(KeyCode.LeftControl))
             controller.changeRunningState();
 
-        if((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && (jumpCounter != maxJumpCount || controller.grounded))
+        if((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || tombolLompat) && (jumpCounter != maxJumpCount || controller.grounded))
         {
             jumpBegin = true;
 
@@ -59,10 +74,10 @@ public class PlayerControl : MonoBehaviour
             jumpCounter++;
         }
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space) || tombolDash)
             dashBegin = true;
 
-        if(Input.GetKeyDown(KeyCode.X))
+        if(Input.GetKeyDown(KeyCode.X) || tombolSerang)
             attackBegin = true;
 
     }
@@ -129,6 +144,56 @@ public class PlayerControl : MonoBehaviour
             else
                 changeAnimationState(PlayerAnimation.Fall);
         }
+    }
+
+    public void klikKanan()
+    {
+        tombolKanan = true;
+    }
+
+    public void lepasKanan()
+    {
+        tombolKanan = false;
+    }
+
+    public void klikKiri()
+    {
+        tombolKiri = true;
+    }
+
+    public void lepasKiri()
+    {
+        tombolKiri = false;
+    }
+
+    public void klikLompat()
+    {
+        tombolLompat = true;
+    }
+
+    public void lepasLompat()
+    {
+        tombolLompat = false;
+    }
+
+    public void klikSerang()
+    {
+        tombolSerang = true;
+    }
+
+    public void lepasSerang()
+    {
+        tombolSerang = false;
+    }
+
+    public void klikDash()
+    {
+        tombolDash = true;
+    }
+
+    public void lepasDash()
+    {
+        tombolDash = false;
     }
 
     void changeAnimationState(PlayerAnimation newState)
