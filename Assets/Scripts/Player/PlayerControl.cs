@@ -19,7 +19,8 @@ public class PlayerControl : MonoBehaviour
         Jump,
         Fall,
         NATK1,
-        NATK2
+        NATK2,
+        Knocked
     }
 
     public Dictionary<PlayerAnimation, string> animationName = new Dictionary<PlayerAnimation, string>(){
@@ -30,7 +31,8 @@ public class PlayerControl : MonoBehaviour
         {PlayerAnimation.Jump, "jump"},
         {PlayerAnimation.Fall, "fall"},
         {PlayerAnimation.NATK1, "normal_attack_1"},
-        {PlayerAnimation.NATK2, "normal_attack_2"}
+        {PlayerAnimation.NATK2, "normal_attack_2"},
+        {PlayerAnimation.Knocked, "ketarketir"}
     };
 
     PlayerAnimation currentAnimationState = PlayerAnimation.Idle;
@@ -46,6 +48,13 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(controller.staggered) {
+            if(controller.grounded && controller.recovering)
+                controller.staggered = false;
+            else
+                return;
+        }
+
         moveDirection = Input.GetAxisRaw("Horizontal");
 
         if(Input.GetKeyDown(KeyCode.LeftControl))
@@ -69,6 +78,12 @@ public class PlayerControl : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(controller.staggered) {
+            Debug.Log("HAAAAAAh!??");
+            animate();
+            return;
+        }
+
         // Start actions
         if(dashBegin) 
         {
@@ -96,6 +111,12 @@ public class PlayerControl : MonoBehaviour
     // Jalankan animasi
     void animate()
     {
+        if(controller.staggered)
+        {
+            changeAnimationState(PlayerAnimation.Knocked);
+            return;
+        }
+
         if(controller.isDashing) {
             changeAnimationState(PlayerAnimation.Dash);
             return;

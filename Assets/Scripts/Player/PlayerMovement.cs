@@ -26,6 +26,8 @@ public class PlayerMovement : MonoBehaviour
 
     private float currentSpeed = 20f;
     private bool facingRight = true;
+    [HideInInspector] public bool staggered = false;
+    [HideInInspector] public bool recovering = false;
     [HideInInspector] public bool isRunning = true;
     [HideInInspector] public bool isDashing = false;
     [HideInInspector] public bool isAttacking = false;
@@ -47,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void Update(){
-        textNyawa.text = "Nyawa: " + nyawa.ToString();
+        textNyawa.text = "HP: " + nyawa.ToString() + "%";
     }
 
     // Update is called once per frame
@@ -76,8 +78,13 @@ public class PlayerMovement : MonoBehaviour
     {
         nyawa -= damage;
 
-        if(nyawa <= 0)
-            Destroy(gameObject);
+        myRigidBody.AddForce(new Vector2(10f * (facingRight ? -1 : 1), 10f), ForceMode2D.Impulse);
+        staggered = true;
+
+        if(nyawa <= 0) {
+            myRigidBody.position = Vector2.zero;
+            nyawa = 100;
+        }
     }
 
     public void startAttack()
@@ -98,6 +105,12 @@ public class PlayerMovement : MonoBehaviour
             enemy.Attacked(attackDamage);
             Debug.Log("Enemy Hit");
         }
+    }
+
+    public void recovery()
+    {
+        Debug.Log("recover");
+        recovering = true;
     }
 
 
@@ -207,10 +220,10 @@ public class PlayerMovement : MonoBehaviour
     // Dijalankan ketika sebuah objek memasuki boundary trigger collider pemain
     void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Masuk");
+        // Debug.Log("Masuk");
         if(!other.isTrigger && ((enemyLayer.value & (1 << other.gameObject.layer)) != 0))
         {
-            Debug.Log("Musuh Masuk");
+            // Debug.Log("Musuh Masuk");
             enemiesInRange.Add(other);
         }
     }

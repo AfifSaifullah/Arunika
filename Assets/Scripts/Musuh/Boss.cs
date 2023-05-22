@@ -20,19 +20,39 @@ public class Boss : Musuh
     [SerializeField] private Rigidbody2D myRigidBody;
     [SerializeField] private Collider2D myCollider;
     [SerializeField] private LayerMask whatIsGround;
+    [SerializeField] private Animator anime;
     private Vector2 anchorPos;
-    private float maxStrayDistance = 10f;
+    private float maxStrayDistance = 20f;
     private float maxStrayTime = 10f;
     [SerializeField] private float strayTimer = 0f;
-    private float movementCD = 2.5f;
+    private float movementCD = 1f;
     [SerializeField] private float flipTimer = 0f;
     
     [SerializeField] private bool attackMode = false;
     private bool jalan = true;
-    private bool arahKanan = true;
+    private bool arahKanan = false;
     private bool serang = false;
     private bool kenaserang = false;
-    public float kecepatan = 3f;
+    public float kecepatan = 5f;
+
+
+    public enum BossAnim {
+        Idle,
+        Walk,
+        NATK1,
+        Mati,
+        KetarKerit
+    }
+
+    public Dictionary<BossAnim, string> animationName = new Dictionary<BossAnim, string>(){
+        {BossAnim.Idle, "idle"},
+        {BossAnim.Walk, "walk"},
+        {BossAnim.NATK1, "serang"},
+        {BossAnim.Mati, "dead"},
+        {BossAnim.KetarKerit, "ketarketir"}
+    };
+
+    BossAnim currentAnimationState;
 
 
     // Start is called before the first frame update
@@ -44,12 +64,14 @@ public class Boss : Musuh
     void Awake()
     {
         nyawa = 80f;
-        attackVal = 1f;
+        attackVal = 15f;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(nyawa <= 0) return;
+
         float strayDistance = Vector2.Distance(myRigidBody.position, anchorPos);
         float playerDistance = Vector2.Distance(myRigidBody.position, PlayerObj.getPos());
         bool anchorDir = myRigidBody.position.x < anchorPos.x;
@@ -70,8 +92,7 @@ public class Boss : Musuh
         
         if(flipTimer > 0)
             flipTimer -= Time.deltaTime;
-
-        if(flipTimer <= 0)
+        else
         {
             flipTimer = movementCD;
 
@@ -86,15 +107,15 @@ public class Boss : Musuh
 
         if(jalan && !kenaserang){
             // anim.SetBool("lari", true);
+            changeAnimationState(BossAnim.Walk);
         
             if(arahKanan)
                 gerakKanan();
             else
                 gerakKiri();
         }
-        else {
-            //anim.SetBool("lari", false);
-            //anim.SetBool("diam", true);
+        else if(!serang){
+            changeAnimationState(BossAnim.Idle);
         }
 
         if(serang){
@@ -102,8 +123,7 @@ public class Boss : Musuh
             // anim.SetBool("lari", false);
             // anim.SetBool("ketarKetir", false);
             // anim.SetBool("diam", false);
-            AttackPlayer();
-            StartCoroutine(WaitForFunction());
+            changeAnimationState(BossAnim.NATK1);
         }
         else {
             // anim.SetBool("serang", false);
@@ -118,6 +138,17 @@ public class Boss : Musuh
         else {
             // anim.SetBool("ketarKetir", false);
         }
+    }
+
+    void changeAnimationState(BossAnim newState)
+    {
+        if(currentAnimationState == newState)
+            return;
+        
+        if(newState == BossAnim.NATK1)
+            Debug.Log("serang");
+        anime.Play(animationName[newState]);
+        currentAnimationState = newState;
     }
 
     IEnumerator WaitForFunction()
@@ -136,7 +167,9 @@ public class Boss : Musuh
         if(collision.gameObject.name == "Player" && !collision.isTrigger) {
             jalan = false;
             serang = true;
+            Debug.Log(jalan ? "JALANWOI" : "STOPPPPP");
         }
+        
     }
 
     void OnTriggerExit2D(Collider2D other)
@@ -144,6 +177,7 @@ public class Boss : Musuh
         if(other.gameObject.name == "Player") {
             jalan = true;
             serang = false;
+            Debug.Log(jalan ? "JALANWOI" : "STOPPPPP");
         }
     }
 
@@ -155,32 +189,41 @@ public class Boss : Musuh
 
     public override void Attacked(float damage)
     {
+        if(nyawa <= 0) return;
+
         kenaserang = true;
-        jalan = false;
         nyawa -= damage;
 
         Debug.Log(nyawa);
 
         if(nyawa <= 0) {
-            Destroy(gameObject);
+            changeAnimationState(BossAnim.Mati);
+        }
+        else {
+            changeAnimationState(BossAnim.KetarKerit);
         }
 
         myRigidBody.AddForce(new Vector2(10f * (arahKanan ? -1 : 1), 5f), ForceMode2D.Impulse);
 
         AudioMan.BossKenaSerang();
+    }
 
+    public void killme()
+    {
+        Destroy(gameObject);
     }
 
     public void BangunLagi()
     {
         kenaserang = false;
+
     }
 
     public void gerakKanan()
     {
         myRigidBody.velocity = Vector2.right * kecepatan;
 
-        if(transform.localScale.x < 0)
+        if(transform.localScale.x > 0)
             balikBadan();
     }
 
@@ -188,7 +231,7 @@ public class Boss : Musuh
     {
         myRigidBody.velocity = Vector2.right * -kecepatan;
 
-        if(transform.localScale.x > 0)
+        if(transform.localScale.x < 0)
             balikBadan();
     }
 
