@@ -8,12 +8,12 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Tilemaps
   - Water
   - UI
   - Enemy Layer
   - Player Layer
-  - 
+  - Foreground
   - 
   - 
   - 
@@ -38,6 +38,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: background
+    uniqueID: 587195855
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
