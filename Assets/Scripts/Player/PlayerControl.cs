@@ -69,6 +69,7 @@ public class PlayerControl : MonoBehaviour
         if((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || tombolLompat) && (jumpCounter != maxJumpCount || controller.grounded))
         {
             jumpBegin = true;
+            tombolLompat = false;
 
             if(controller.grounded) jumpCounter = 0;
             jumpCounter++;
@@ -79,6 +80,7 @@ public class PlayerControl : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.X) || tombolSerang)
             attackBegin = true;
+            tombolSerang = false;
 
     }
 
