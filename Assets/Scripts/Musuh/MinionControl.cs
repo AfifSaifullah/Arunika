@@ -119,15 +119,6 @@ public class MinionControl : Musuh
             jalan = false;
             serang = true;
         }
-
-        if(collision.gameObject.name == "tembokKanan") {
-            arahKanan = false;
-        }
-
-        if(collision.gameObject.name == "tembokKiri") {
-            arahKanan = true;
-        }
-
     }
 
     void OnTriggerExit2D(Collider2D other)

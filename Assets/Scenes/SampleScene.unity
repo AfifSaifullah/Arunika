@@ -1200,7 +1200,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 395696458}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.26, y: -0.98, z: 0}
+  m_LocalPosition: {x: 149.5, y: 9.4, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -2654,13 +2654,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nyawa: 500
   attackVal: 20
-  PlayerObj: {fileID: 0}
-  AudioMan: {fileID: 0}
-  myRigidBody: {fileID: 0}
-  myCollider: {fileID: 0}
+  PlayerObj: {fileID: 395696467}
+  AudioMan: {fileID: 594326897}
+  myRigidBody: {fileID: 880190197}
+  myCollider: {fileID: 880190196}
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   strayTimer: 0
   flipTimer: 0
   attackMode: 0
