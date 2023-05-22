@@ -2652,8 +2652,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3640d1f813b0e4149830bb1e49e5ccae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nyawa: 0
-  attackVal: 0
+  nyawa: 500
+  attackVal: 20
   myRig: {fileID: 0}
   myCold: {fileID: 0}
   myTrig: {fileID: 0}
