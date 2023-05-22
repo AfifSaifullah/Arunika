@@ -40,39 +40,39 @@ public class MinionControl : Musuh
     // Update is called once per frame
     void Update()
     {
-        // float strayDistance = Vector2.Distance(myRigidBody.position, anchorPos);
-        // float playerDistance = Vector2.Distance(myRigidBody.position, PlayerObj.getPos());
-        // bool anchorDir = myRigidBody.position.x < anchorPos.x;
-        // attackMode = (playerDistance <= maxStrayDistance);
+        float strayDistance = Vector2.Distance(myRigidBody.position, anchorPos);
+        float playerDistance = Vector2.Distance(myRigidBody.position, PlayerObj.getPos());
+        bool anchorDir = myRigidBody.position.x < anchorPos.x;
+        attackMode = (playerDistance <= maxStrayDistance);
 
-        // // Cek apakah monster keluar batas areanya
-        // if(strayDistance >= maxStrayDistance) {
-        //     if(strayTimer > 0)
-        //         strayTimer -= Time.deltaTime;
+        // Cek apakah monster keluar batas areanya
+        if(strayDistance >= maxStrayDistance) {
+            if(strayTimer > 0)
+                strayTimer -= Time.deltaTime;
 
-        //     if(strayTimer <= 0) {
-        //         myRigidBody.position = anchorPos;
-        //         strayTimer = maxStrayTime;
-        //         attackMode = false;
-        //     }
-        // }
+            if(strayTimer <= 0) {
+                myRigidBody.position = anchorPos;
+                strayTimer = maxStrayTime;
+                attackMode = false;
+            }
+        }
 
         
-        // if(flipTimer > 0)
-        //     flipTimer -= Time.deltaTime;
+        if(flipTimer > 0)
+            flipTimer -= Time.deltaTime;
 
-        // if(flipTimer <= 0)
-        // {
-        //     flipTimer = movementCD;
+        if(flipTimer <= 0)
+        {
+            flipTimer = movementCD;
 
-        //     if(attackMode)
-        //         arahKanan = (PlayerObj.getPos().x > myRigidBody.position.x);
-        //     else
-        //         arahKanan = !arahKanan;
-        // }
+            if(attackMode)
+                arahKanan = (PlayerObj.getPos().x > myRigidBody.position.x);
+            else
+                arahKanan = !arahKanan;
+        }
 
-        // if((strayDistance >= maxStrayDistance) && arahKanan != anchorDir)
-        //     arahKanan = anchorDir;
+        if((strayDistance >= maxStrayDistance) && arahKanan != anchorDir)
+            arahKanan = anchorDir;
 
         if(jalan && !kenaserang){
             anim.SetBool("lari", true);
